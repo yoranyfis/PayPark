@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <img src="./assets/imgs/Ativo 2pao.png" alt="" width="30" height="30">
+                        </span>
+                        <span class="title">PAypark</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>    
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="help-outline"></ion-icon>
+                        </span>
+                        <span class="title">Help</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Settings</span>
+                    </a>
+                </li>
+
+               
+
+               
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="user">
+                    <img src="assets/imgs/customer01.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- ======================= Cards ================== -->
+            
+                <div class="mapa"  id="map">
+                    
+
+    <!-- Adicionar o script do Google Maps com sua chave de API -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlUb0n6PLMh604Hck0VR67hkKLEtwUK-E&libraries=places&callback=initMap">
+    </script>
+
+    <script>
+        let map;
+        let service;
+        let infowindow;
+
+        // Função de inicialização do mapa
+        function initMap() {
+            // Verificar se a geolocalização é suportada
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    // Criar um novo mapa e centralizá-lo na localização do usuário
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,  // Nível de zoom
+                        center: userLocation
+                    });
+
+                    // Adicionar um marcador na localização do usuário
+                    var marker = new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: 'Você está aqui'
+                    });
+
+                    // Procurar estacionamentos próximos
+                    var request = {
+                        location: userLocation,
+                        radius: '1000',  // Raio de busca em metros
+                        type: ['parking']  // Tipo de lugar a procurar
+                    };
+
+                    service = new google.maps.places.PlacesService(map);
+                    service.nearbySearch(request, callback);
+
+                }, function() {
+                    handleLocationError(true, map.getCenter());
+                });
+            } else {
+                // Geolocalização não é suportada pelo navegador
+                handleLocationError(false, map.getCenter());
+            }
+        }
+
+        // Função de callback para processar os resultados da busca
+        function callback(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (let i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                }
+            }
+        }
+
+        // Função para criar marcadores para cada estacionamento encontrado
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: placeLoc,
+                title: place.name,
+                icon: {
+                    url: "http://maps.google.com/mapfiles/ms/icons/purple-dot.png"  // Ícone lilás
+                }
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent(place.name);
+                infowindow.open(map, this);
+            });
+        }
+
+        // Função para lidar com erros de geolocalização
+        function handleLocationError(browserHasGeolocation, pos) {
+            var infoWindow = new google.maps.InfoWindow({
+                map: map
+            });
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                                  'Erro: O serviço de geolocalização falhou.' :
+                                  'Erro: Seu navegador não suporta geolocalização.');
+        }
+    </script>
+                </div>
+               
+
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
